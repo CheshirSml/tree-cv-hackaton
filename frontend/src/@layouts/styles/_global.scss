@@ -1,0 +1,20 @@
+*,
+::before,
+::after {
+  box-sizing: inherit;
+  background-repeat: no-repeat;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+.v-btn__content {
+  text-transform: none !important;
+}
+
+@media (max-width: 600px) {
+  .layout-page-content {
+    padding-inline: .5rem !important;
+  }
+}
