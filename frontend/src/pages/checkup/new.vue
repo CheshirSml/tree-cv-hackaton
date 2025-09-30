@@ -1,69 +1,92 @@
 <script setup lang="ts">
 
+import { useApi } from '@/composables/useApi';
 import { ref } from "vue";
+import { toast } from 'vue3-toastify';
 
-const date = ref<string>("")
-const specialist = ref<string>("")
-const district = ref<string>("")
-const comment = ref<string>("")
+const $api = useApi()
 const $router = useRouter()
 
+const isLoading = ref(false)
+const isProcessing = ref(false)
+const checkupData = ref<any | null>(null)
+
 const districts = [
-  "Центральный",
-  "Северный",
-  "Южный",
-  "Восточный",
-  "Западный"
+  { id: "a12_sokolniki", title: "А-12, Сокольники" },
+  { id: "b3_troitsk", title: "Б-3, Троицкий лес" },
+  { id: "c7_tsaritsyno", title: "С-7, Царицыно" },
+  { id: "d5_botanic", title: "D-5, Ботанический сад" },
 ]
 
-const submitCheckup = () => {
-  console.log({
-    date: date.value,
-    specialist: specialist.value,
-    district: district.value,
-    comment: comment.value
-  })
-
-  $router.push('/checkup/new2')
+const loadData = () => {
+  isLoading.value = true
+  $api.get('/checkups/prototype/')
+    .then((response) => {
+      checkupData.value = response.data
+      isLoading.value = false
+    })
 }
+
+const submitCheckup = () => {
+  isProcessing.value = true
+  $api.post('/checkups/', checkupData.value)
+    .then((response: any) => {
+      isProcessing.value = false
+      $router.push('/checkup/' + response.data.id + '/')
+    })
+    .catch(() => {
+      isProcessing.value = false
+      toast.error("Не удалось создать оьследование. ", {
+        autoClose: 8000,
+      })
+    })
+
+}
+
+onMounted(() => loadData())
+
 </script>
 
 <template>
   <v-container class="pa-4" style="max-width: 480px">
     <v-card class="pa-4 rounded-lg" elevation="2">
+
+      <VProgressLinear v-if="isLoading" indeterminate absolute />
+
       <v-card-title class="text-h5 font-weight-bold">
         Создать обследование
       </v-card-title>
 
-      <v-card-text>
+      <v-card-text v-if="!!checkupData">
         <!-- Дата -->
         <div class="mb-4">
           <label class="text-body-2 mb-1 d-block">Дата обследования</label>
-          <v-text-field v-model="date" type="date" prepend-inner-icon="ri-calendar-line" variant="outlined"
-            density="comfortable" hide-details />
+          <v-text-field v-model="checkupData.report_date" type="date" prepend-inner-icon="ri-calendar-line"
+            variant="outlined" density="comfortable" hide-details :disabled="isProcessing" />
         </div>
 
         <!-- Специалист -->
         <div class="mb-4">
           <label class="text-body-2 mb-1 d-block">Специалист</label>
-          <v-text-field v-model="specialist" prepend-inner-icon="ri-user-line" variant="outlined" density="comfortable"
-            hide-details />
+          <v-text-field model-value="Иванов Петр Сергеевич" prepend-inner-icon="ri-user-line" variant="outlined"
+            density="comfortable" hide-details readonly :disabled="isProcessing" />
         </div>
 
         <!-- Район -->
         <div class="mb-4">
           <label class="text-body-2 mb-1 d-block">Район обследования</label>
-          <v-select v-model="district" :items="districts" prepend-inner-icon="ri-map-pin-line" variant="outlined"
-            density="comfortable" hide-details />
+          <v-select v-model="checkupData.plot" :items="districts" prepend-inner-icon="ri-map-pin-line" variant="outlined"
+            density="comfortable" hide-details item-title="title" item-value="id" :disabled="isProcessing" />
         </div>
 
         <!-- Комментарий -->
         <div class="mb-4">
           <label class="text-body-2 mb-1 d-block">Комментарий</label>
-          <v-textarea v-model="comment" variant="outlined" rows="3" auto-grow hide-details />
+          <v-textarea v-model="checkupData.comment" variant="outlined" :disabled="isProcessing" rows="3" auto-grow
+            hide-details />
         </div>
 
-        <v-btn class="ma-auto" block color="primary" rounded="xl" @click="submitCheckup">
+        <v-btn class="ma-auto" block color="primary" :disabled="isProcessing" rounded="xl" @click="submitCheckup">
           Создать обследование
         </v-btn>
       </v-card-text>

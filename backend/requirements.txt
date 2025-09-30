@@ -1,0 +1,22 @@
+django==4.2.13
+djangorestframework==3.15.2
+coreapi-cli==1.0.9
+django-cors-headers==4.4.0
+psycopg2-binary
+django-rest-auth==0.9.5
+wheel==0.43.0
+django-allauth==0.63.3
+django-environ
+pillow
+easy-thumbnails
+# django-modeladmin-reorder
+# django-rest-allauth
+drf-yasg
+openai
+requests
+
+torch==2.4.0+cpu
+torchvision==0.19.0+cpu
+--extra-index-url https://download.pytorch.org/whl/cpu
+numpy
+ultralytics

@@ -1,29 +1,26 @@
 <script setup lang="ts">
+import { useApi } from '@/composables/useApi';
 import emptyProfilePhoto from '@images/avatars/empty-profile-photo.png';
 
-const investigations = ref([
-  {
-    title: 'Участок: А-12, Сокольники',
-    created_date: '12.09.2025',
-    count: 12,
-    status: 'Завершено',
-    color: 'success'
-  },
-  {
-    title: 'Участок: А-12, Сокольники',
-    created_date: '12.09.2025',
-    count: 10,
-    status: 'Обработка 65%',
-    color: 'primary'
-  },
-  {
-    title: 'Участок: А-12, Сокольники',
-    created_date: '12.09.2025',
-    count: 12,
-    status: 'Ожидание',
-    color: 'warning'
-  },
-])
+const $api = useApi()
+const isLoading = ref(false)
+const checkupsData = ref<any | null>(null)
+const checkupsTotalCount = ref(0)
+const itemsPerPage = ref(10)
+const pageNumber = ref(1)
+
+const loadData = () => {
+  isLoading.value = true
+  $api.get('/checkups/?page=' + pageNumber.value)
+    .then((response) => {
+      checkupsData.value = response.data.results
+      checkupsTotalCount.value = response.data.count
+      isLoading.value = false
+    })
+}
+
+onMounted(() => loadData())
+watch(() => pageNumber.value, () => loadData())
 
 </script>
 
@@ -60,22 +57,26 @@ const investigations = ref([
         <h2 class="text-h4 text-center">Мои обследования</h2>
       </VCol>
 
-      <VCol v-for="investigation in investigations" cols="12">
-        <VAlert :title="investigation.title" border="start" :border-color="investigation.color"
-          style="box-shadow: 0px 4px 4px #ccc;">
+      <VCol v-for="checkup in checkupsData" cols="12">
+        <VAlert border="start" border-color="primary" style="box-shadow: 0px 4px 4px #ccc;">
+          <div class="v-alert-title">
+            <RouterLink :to="'/checkup/' + checkup.id">
+              {{ 'Участок: ' + checkup.plot }}
+            </RouterLink>
+          </div>
 
           <ul>
-            <li>Дата: {{ investigation.created_date }}</li>
-            <li>Количество фото: {{ investigation.count }}</li>
+            <li>Дата: {{ checkup.report_date }}</li>
+            <li>Количество фото: {{ checkup.photos.length }}</li>
           </ul>
 
-          <VChip :color="investigation.color" style="position: absolute; right: 10px; bottom: 11px; ">{{
-            investigation.status }}</VChip>
+          <VChip color="primary" style="position: absolute; right: 10px; bottom: 11px; ">{{
+            checkup.status }}</VChip>
         </VAlert>
       </VCol>
 
       <VCol cols="12" class="my-4">
-        <VPagination />
+        <VPagination v-model:page="pageNumber" :items-per-page="itemsPerPage" :total-items="checkupsTotalCount" />
       </VCol>
 
     </VRow>
