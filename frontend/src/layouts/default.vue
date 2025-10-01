@@ -15,6 +15,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   isLoading.value = false
 })
+
 </script>
 
 <template>

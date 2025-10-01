@@ -7,6 +7,10 @@ const props = defineProps({
   }
 })
 
+const baseUrl = computed(() => {
+  return import.meta.env.VITE_BASE_URL.replace('/tapi', '').replace('/api', '')
+})
+
 </script>
 
 <template>
@@ -42,7 +46,7 @@ const props = defineProps({
   <div v-for="tree in checkupData.photos" :key="tree.id" class="mb-6">
     <v-card v-if="tree.annotation" class="rounded-lg overflow-hidden" elevation="2">
       <!-- Фото (берём annotated если есть, иначе оригинал) -->
-      <v-img :src="tree.annotation.annotated_photo || tree.preview" cover />
+      <v-img :src="baseUrl + (tree.annotation.annotated_photo || tree.preview)" cover />
 
       <v-card-text>
         <!-- Порода дерева -->

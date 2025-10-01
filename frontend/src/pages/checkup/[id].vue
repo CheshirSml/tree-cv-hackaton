@@ -25,9 +25,20 @@ const loadData = () => {
   isLoading.value = true
   $api.get('/checkups/' + checkupId + '/')
     .then((response) => {
+      console.log('API response:', response)
       checkupData.value = response.data
       isLoading.value = false
     })
+    .catch((error) => {
+      console.error('API request failed:', error)
+      // Покажет даже если WebView блокирует
+      alert(
+        `API request failed\nMessage: ${error.message}\n` +
+        `${error.response ? JSON.stringify(error.response.data) : 'No response'}`
+      )
+      isLoading.value = false
+    })
+
 }
 
 onMounted(() => loadData())

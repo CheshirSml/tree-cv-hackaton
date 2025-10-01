@@ -37,6 +37,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     acceptMediaTypes: {
       type: String,
       default: '*'
@@ -133,14 +137,14 @@ export default defineComponent({
 
 <template>
   <label>
-    <VBtn @click="clickOnFile" :disabled="is_processing" :loading="is_processing" class="mr-4" block color="secondary"
-      rounded="xl" prepend-icon="ri-upload-2-line">
+    <VBtn @click="clickOnFile" :disabled="is_processing || disabled" :loading="is_processing" class="mr-4" block
+      color="secondary" rounded="xl" prepend-icon="ri-upload-2-line">
       <span style="text-transform: none;">
         {{ label }}
       </span>
     </VBtn>
     <input ref="file" type="file" name="photo" class="form-control mt-2" hidden :accept="acceptMediaTypes"
-      @change="handleUpload">
+      :disabled="disabled" @change="handleUpload">
   </label>
 </template>
 
