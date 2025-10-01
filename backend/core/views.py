@@ -43,7 +43,7 @@ from django.conf import settings
 from core.utils.annotator import annotate_photo
 
 class CheckupViewSet(ModelViewSet):
-    queryset = Checkup.objects.all().order_by("-report_date")
+    queryset = Checkup.objects.all().order_by("-id")
     serializer_class = CheckupSerializer
     pagination_class = StandardResultsSetPagination
 
@@ -79,15 +79,18 @@ class CheckupViewSet(ModelViewSet):
             tree = provider.predict(photo_base64, image_size)
             print(tree)
             
-            photo.annotation.bbox = tree['bbox']
-            photo.annotation.object_type = RUS_TO_ENUM[tree["type"]]
-            photo.annotation.breed = RUS_TO_ENUM.get(tree["breed"], Breed.UNKNOWN)
-            photo.annotation.condition = RUS_TO_ENUM[tree["condition"]]
-            photo.annotation.is_dry = tree["is_dry"]
-            photo.annotation.percentage_dried = tree["percentage_dried"]
-            photo.annotation.artifacts = [RUS_TO_ENUM[a] for a in tree.get("artifacts", [])]
-            photo.annotation.description = tree.get("description", "")
-            photo.annotation.season = RUS_TO_ENUM.get(tree["season"])
+            if tree:
+                photo.annotation.bbox = tree['bbox']
+                photo.annotation.object_type = RUS_TO_ENUM[tree["type"]]
+                photo.annotation.breed = RUS_TO_ENUM.get(tree["breed"], Breed.UNKNOWN)
+                photo.annotation.condition = RUS_TO_ENUM[tree["condition"]]
+                photo.annotation.is_dry = tree["is_dry"]
+                photo.annotation.percentage_dried = tree["percentage_dried"]
+                photo.annotation.artifacts = [RUS_TO_ENUM[a] for a in tree.get("artifacts", [])]
+                photo.annotation.description = tree.get("description", "")
+                photo.annotation.season = RUS_TO_ENUM.get(tree["season"])
+            else:
+                photo.annotation.description = 'Деревья не обнаружены'
             photo.annotation.save()
 
             annotate_photo(photo)
