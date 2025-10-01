@@ -30,8 +30,19 @@ SECRET_KEY = 'django-insecure-lvbc00v86y_fv@wv_c3a^-=7mza!2*ypity23vv%7su69%%-m=
 DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '45.89.66.66']
-CSRF_TRUSTED_ORIGINS = ['http://0.0.0.0:3100', 'http://localhost:3000', 'http://127.0.0.1:3000', 'http://45.89.66.66:8070']
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
+    "http://45.89.66.66:8070",
+]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://0.0.0.0:3000",
+    "http://45.89.66.66:8070",
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,14 +57,16 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     # 'rest_framework.authtoken',
     'django.contrib.admin',
+    "corsheaders",
     'core',
     "drf_yasg",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
