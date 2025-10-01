@@ -14,7 +14,7 @@ const loadData = () => {
   $api.get('/checkups/?page=' + pageNumber.value)
     .then((response) => {
       checkupsData.value = response.data.results
-      checkupsTotalCount.value = response.data.count
+      checkupsTotalCount.value = parseInt(response.data.count)
       isLoading.value = false
     })
 }
@@ -76,7 +76,7 @@ watch(() => pageNumber.value, () => loadData())
       </VCol>
 
       <VCol cols="12" class="my-4">
-        <VPagination v-model:page="pageNumber" :items-per-page="itemsPerPage" :total-items="checkupsTotalCount" />
+        <VPagination v-model:page="pageNumber" :items-per-page="itemsPerPage" :total-items="checkupsTotalCount || 0" />
       </VCol>
 
     </VRow>
