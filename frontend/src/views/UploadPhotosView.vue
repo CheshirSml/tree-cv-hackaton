@@ -48,28 +48,33 @@ const updatePhotos = (photo: any) => {
   $emit('update:checkupData', data)
 }
 
+const baseUrl = computed(() => {
+  return import.meta.env.VITE_BASE_URL.replace('/tapi', '').replace('/api', '')
+})
+
 </script>
 
 <template>
   <!-- Верхние кнопки -->
   <div class="d-flex flex-column gap-3 mb-6">
     <!-- <v-btn block color="primary" rounded="xl" prepend-icon="ri-camera-line" @click="takePhoto">
-                      Сфотографировать дерево/куст
-                    </v-btn> -->
+                          Сфотографировать дерево/куст
+                        </v-btn> -->
 
     <UploadPhotosMany label="Загрузить фотографии" :api="'/photos/'" :props="{ checkup: checkupData.id }"
       accept-media-types="image/png, image/jpeg, image/gif" @uploaded="updatePhotos" :disabled="isProcessing" />
 
     <v-row dense>
       <v-col v-for="photoItem, index in checkupData.photos" :key="index" cols="6" class="mb-4">
-        <PhotoPreview photo-status="Готово" :photo-url="photoItem.preview" />
+        <PhotoPreview photo-status="Готово" :photo-url="baseUrl + photoItem.preview" />
       </v-col>
     </v-row>
 
   </div>
 
   <!-- Кнопка завершить -->
-  <v-btn class="mt-6" block color="success" rounded="xl" @click="finishSurvey" :disabled="isProcessing">
+  <v-btn class="mt-6" block color="success" rounded="xl" @click="finishSurvey" :loading="isProcessing"
+    :disabled="isProcessing">
     Завершить обследование
   </v-btn>
 </template>

@@ -7,6 +7,15 @@ const props = defineProps({
   }
 })
 
+// вычисляем количество по состоянию
+const counts = computed(() => {
+  const healthy = props.checkupData.photos.filter((p: any) => p.annotation.condition === 'нормальное').length
+  const unsatisfactory = props.checkupData.photos.filter((p: any) => p.annotation.condition === 'не удовлетворительное').length
+  const critical = props.checkupData.photos.filter((p: any) => !['нормальное', 'не удовлетворительное'].includes(p.annotation.condition)).length
+
+  return { healthy, unsatisfactory, critical }
+})
+
 const baseUrl = computed(() => {
   return import.meta.env.VITE_BASE_URL.replace('/tapi', '').replace('/api', '')
 })
@@ -17,19 +26,16 @@ const baseUrl = computed(() => {
   <!-- Обобщение -->
   <v-card class="pa-4 mb-6 rounded-lg" elevation="3">
     <div class="d-flex justify-space-around mb-4">
-      <!-- Здоровые -->
       <v-chip color="success" variant="flat" class="px-3">
-        <strong>3</strong>&nbsp; здоровые
+        <strong>{{ counts.healthy }}</strong>&nbsp; здоровые
       </v-chip>
 
-      <!-- Неудовлетворительные -->
       <v-chip color="warning" variant="flat" class="px-3">
-        <strong>1</strong>&nbsp; неуд.
+        <strong>{{ counts.unsatisfactory }}</strong>&nbsp; неуд.
       </v-chip>
 
-      <!-- Аварийные -->
       <v-chip color="error" variant="flat" class="px-3">
-        <strong>2</strong>&nbsp; аварийные
+        <strong>{{ counts.critical }}</strong>&nbsp; аварийные
       </v-chip>
     </div>
 
