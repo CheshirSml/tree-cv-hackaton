@@ -29,12 +29,13 @@ SECRET_KEY = 'django-insecure-lvbc00v86y_fv@wv_c3a^-=7mza!2*ypity23vv%7su69%%-m=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '45.89.66.66']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', '45.89.66.66', 'botanicpanic.pro']
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://0.0.0.0:3000",
     "http://45.89.66.66:8070",
+    "https://botanicpanic.pro",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -42,6 +43,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://0.0.0.0:3000",
     "http://45.89.66.66:8070",
+    "https://botanicpanic.pro",
 ]
 # Application definition
 
