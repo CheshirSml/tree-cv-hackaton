@@ -19,17 +19,3 @@ export const useApi = () => {
   return instance
 }
 
-export const updateUserProfile = async (profileData: any) => {
-
-  const $api = useApi()
-  let updatedData = null as null|any
-
-  await $api.post('profile/update/', profileData)
-    .then((response) => {
-      updatedData = response.data
-    })
-    .catch(() => {
-    })
-
-  return updatedData
-}
