@@ -13,11 +13,10 @@
 ---
 
 ## Структура проекта
-backend/ # Серверная часть (Django/FastAPI)
-frontend/ # Веб-приложение (Vue + Vuetify + Vite)
-frontend/android/ # Android-обёртка через Capacitor
-mlmodels_store/ # ML модели и веса
-
+- backend/ # Серверная часть (Django/FastAPI)
+- frontend/ # Веб-приложение (Vue + Vuetify + Vite)
+- frontend/android/ # Android-обёртка через Capacitor
+- mlmodels_store/ # ML модели и веса
 
 ---
 
@@ -82,6 +81,7 @@ cd android
 ## API
 - Swagger документация: http://45.89.66.66:8071/swagger/
 - Публичный API: https://botanicpanic.pro/tapi
+- Вебинтерфейс: http://45.89.66.66:8070/
 
 ---
 
