@@ -41,6 +41,7 @@ PROVIDER_SUBMODEL=gemini-2.5-flash-lite
 ```
 
 ```bash
+python3 manage.py migrate
 python3 manage.py runserver
 ```
 
