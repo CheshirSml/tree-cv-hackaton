@@ -70,12 +70,14 @@ RUS_TO_ENUM = {
     "клён": Breed.MAPLE,
     "ель": Breed.SPRUCE,
     "не определено": Breed.UNKNOWN,
+
     "нормальное": Condition.NORMAL,
     "заваливающееся": Condition.FALLING,
     "упавшее": Condition.FALLEN,
-    "авариайное": Condition.EMERGENCY,
+    "аварийное": Condition.EMERGENCY,
     "не удовлетворительное": Condition.UNSATISFACTORY,
     "пенёк": Condition.STUMP,
+
     "вегетативный": Season.VEGETATIVE,
     "не вегетативный": Season.NON_VEGETATIVE,
     "трещина": Artifact.CRACK,

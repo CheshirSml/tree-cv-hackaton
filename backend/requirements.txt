@@ -14,6 +14,7 @@ easy-thumbnails
 drf-yasg
 openai
 requests
+transliterate
 
 torch==2.4.0+cpu
 torchvision==0.19.0+cpu
