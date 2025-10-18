@@ -61,13 +61,13 @@ watch(() => pageNumber.value, () => loadData())
         <VAlert border="start" border-color="primary" style="box-shadow: 0px 4px 4px #ccc;">
           <div class="v-alert-title">
             <RouterLink :to="'/checkup/' + checkup.id">
-              {{ 'Участок: ' + checkup.plot }}
+              {{ 'Участок: ' + checkup.area_detail?.title }}
             </RouterLink>
           </div>
 
           <ul>
             <li>Дата: {{ checkup.report_date }}</li>
-            <li>Количество фото: {{ checkup.photos.length }}</li>
+            <li>Количество деревьев: {{ checkup.photos.length }}</li>
           </ul>
 
           <VChip color="primary" style="position: absolute; right: 10px; bottom: 11px; ">{{

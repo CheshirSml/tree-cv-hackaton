@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from easy_thumbnails.files import get_thumbnailer
 
-from .models import Checkup, CheckupPhoto, CheckupPhotoAnnotation
+from .models import Checkup, CheckupPhoto, CheckupPhotoAnnotation, DistrictArea
 from .choices import (
     RUS_TO_ENUM,
 )
@@ -77,16 +77,23 @@ class CheckupPhotoSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_preview(obj):
-        crop_options = {'size': (250, 250), 'crop': 'scale'}
+        crop_options = {'size': (450, 450), 'crop': 'scale'}
         try:
             return get_thumbnailer(obj.photo).get_thumbnail(crop_options).url
         except Exception as e:
             pass
 
 
+class DistrictAreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DistrictArea
+        fields = "__all__"
+
+
 class CheckupSerializer(serializers.ModelSerializer):
 
     photos = CheckupPhotoSerializer(many=True, read_only=True)
+    area_detail = DistrictAreaSerializer(source='area', read_only=True)
 
     class Meta:
         model = Checkup

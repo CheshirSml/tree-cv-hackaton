@@ -10,21 +10,22 @@ const $router = useRouter()
 const isLoading = ref(false)
 const isProcessing = ref(false)
 const checkupData = ref<any | null>(null)
+const districtAreas = ref<any[] | null>(null)
 
-const districts = [
-  { id: "a12_sokolniki", title: "А-12, Сокольники" },
-  { id: "b3_troitsk", title: "Б-3, Троицкий лес" },
-  { id: "c7_tsaritsyno", title: "С-7, Царицыно" },
-  { id: "d5_botanic", title: "D-5, Ботанический сад" },
-]
-
-const loadData = () => {
+const loadData = async () => {
   isLoading.value = true
-  $api.get('/checkups/prototype/')
+
+  await $api.get('/areas/')
+    .then((response) => {
+      districtAreas.value = response.data
+    })
+
+  await $api.get('/checkups/prototype/')
     .then((response) => {
       checkupData.value = response.data
-      isLoading.value = false
     })
+
+  isLoading.value = false
 }
 
 const submitCheckup = () => {
@@ -75,8 +76,9 @@ onMounted(() => loadData())
         <!-- Район -->
         <div class="mb-4">
           <label class="text-body-2 mb-1 d-block">Район обследования</label>
-          <v-select v-model="checkupData.plot" :items="districts" prepend-inner-icon="ri-map-pin-line" variant="outlined"
-            density="comfortable" hide-details item-title="title" item-value="id" :disabled="isProcessing" />
+          <v-select v-model="checkupData.area" :items="districtAreas ?? []" prepend-inner-icon="ri-map-pin-line"
+            variant="outlined" density="comfortable" hide-details item-title="title" item-value="id"
+            :disabled="isProcessing || !districtAreas" :loading="!districtAreas" />
         </div>
 
         <!-- Комментарий -->
