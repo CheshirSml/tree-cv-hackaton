@@ -245,10 +245,10 @@ if __name__ == "__main__":
     # === НАСТРОЙТЕ ===
     ROI_DIR = "breed_classification_dataset/rois_breed"
     CSV_FILE = "breed_classification_dataset/labels.csv"
-    MODEL_SAVE_PATH = "best_efficientnet_b0_breed_comet.pth"
+    MODEL_SAVE_PATH = "_models/best_efficientnet_b0_breed_comet_max_1.pth"
 
     # Ваш API-ключ из https://www.comet.com
-    COMET_API_KEY = ""  # ← замените!
+    COMET_API_KEY = "vbFufJbPScktiFNnZ3cjt2YUa"  # ← замените!
     COMET_PROJECT_NAME = "tree-breed-roi"
 
     train_model_with_comet(
