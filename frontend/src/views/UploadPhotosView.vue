@@ -24,10 +24,6 @@ const takePhoto = () => {
   console.log("📷 Сфотографировать дерево/куст")
 }
 
-// const uploadPhotos = () => {
-//   console.log("📂 Загрузить фотографии")
-// }
-
 const finishSurvey = () => {
   isProcessing.value = true
   $api.post('/checkups/' + props.checkupData.id + '/finish/')
@@ -52,17 +48,35 @@ const baseUrl = computed(() => {
   return import.meta.env.VITE_BASE_URL.replace('/tapi', '').replace('/api', '')
 })
 
+const updateCoords = (photo: any) => {
+  if (!photo.coords && photo.id) {
+    photo.coords = getRandomPointInSquare(props.checkupData.area_detail.coords)
+    $api.patch('/photos/' + photo.id + '/update-coords/', {
+      coords: photo.coords
+    })
+  }
+}
+
+const getRandomPointInSquare = (coords: number[]) => {
+  // coords = [northLat, westLng, southLat, eastLng]
+  const [northLat, westLng, southLat, eastLng] = coords;
+
+  // Генерируем случайные координаты внутри квадрата
+  const randomLat = Math.random() * (northLat - southLat) + southLat;
+  const randomLng = Math.random() * (eastLng - westLng) + westLng;
+
+  return [randomLat, randomLng];
+}
+
 </script>
 
 <template>
   <!-- Верхние кнопки -->
   <div class="d-flex flex-column gap-3 mb-6">
-    <!-- <v-btn block color="primary" rounded="xl" prepend-icon="ri-camera-line" @click="takePhoto">
-                          Сфотографировать дерево/куст
-                        </v-btn> -->
 
     <UploadPhotosMany label="Загрузить фотографии" :api="'/photos/'" :props="{ checkup: checkupData.id }"
-      accept-media-types="image/png, image/jpeg, image/gif" @uploaded="updatePhotos" :disabled="isProcessing" />
+      accept-media-types="image/png, image/jpeg, image/gif" @uploaded="updatePhotos($event); updateCoords($event)"
+      :disabled="isProcessing" />
 
     <v-row dense>
       <v-col v-for="photoItem, index in checkupData.photos" :key="index" cols="6" class="mb-4">

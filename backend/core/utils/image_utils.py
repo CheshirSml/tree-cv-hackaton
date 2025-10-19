@@ -5,11 +5,20 @@ import base64
 from uuid import uuid4
 from pathlib import Path
 from PIL import Image
-# from fastapi import UploadFile
 from typing import Tuple
 from io import BytesIO
+from typing import Union, BinaryIO
+
 
 TARGET_SIZE = (640, 640)
+
+def get_image(file: BinaryIO):
+    file_bytes = file.read()
+    try:
+        image = Image.open(io.BytesIO(file_bytes))
+    except Exception:
+        raise Exception("Некорректный формат изображения")
+    return image
 
 def get_image_size(file: BytesIO) -> Tuple[int, int]:
     image = Image.open(file)
@@ -46,24 +55,39 @@ def resize_to_square(image: Image.Image, size: int = 1024) -> Image.Image:
     new_img.paste(image, offset)
     return new_img
 
-def get_base64_image(file: any):
-        # читаем байты
-    file_bytes = file.read()
-
-    # открываем картинку
-    try:
-        image = Image.open(io.BytesIO(file_bytes))
-    except Exception:
-        raise Exception("Некорректный формат изображения")
-
-    # приводим к 1024×1024 с паддингами
-    image_resized = resize_to_square(image, 1024)
+def get_base64_image(file: Union[BinaryIO, Image.Image]):
+    if isinstance(file, Image.Image):
+        image = file
+    else:
+        file_bytes = file.read()
+        try:
+            image = Image.open(io.BytesIO(file_bytes))
+        except Exception:
+            raise Exception("Некорректный формат изображения")
 
     # сохраняем в JPEG в память
     buffer = io.BytesIO()
-    image_resized.save(buffer, format="JPEG", quality=95)
+    image.save(buffer, format="JPEG", quality=95)
     buffer.seek(0)
 
     # кодируем в base64
     b64_str = base64.b64encode(buffer.read()).decode("utf-8")
     return f"data:image/jpeg;base64,{b64_str}"
+
+def rotate_image_90(image: Image.Image, angle: int) -> Image.Image:
+    """
+    Поворачивает изображение на угол, кратный 90°.
+    angle: 90, 180, 270 (по часовой стрелке)
+    """
+    angle = angle % 360
+    if angle == 90:
+        return image.transpose(Image.ROTATE_270)  # по часовой стрелке
+    elif angle == 180:
+        return image.transpose(Image.ROTATE_180)
+    elif angle == 270:
+        return image.transpose(Image.ROTATE_90)
+    elif angle == 0:
+        return image.copy()
+    else:
+        return image.copy()
+    

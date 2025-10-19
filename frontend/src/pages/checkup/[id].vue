@@ -49,7 +49,7 @@ onMounted(() => loadData())
     <!-- Заголовок участка -->
     <h2 class="text-h4 font-weight-bold mb-4">
       <IconBtn icon="ri-arrow-left-line" class="mr-1" to="/" />
-      Участок А-12, Сокольники
+      Участок: {{ checkupData?.area_detail?.title }}
     </h2>
 
     <template v-if="checkupData">

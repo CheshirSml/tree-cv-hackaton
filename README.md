@@ -17,6 +17,7 @@
 - frontend/ # Веб-приложение (Vue + Vuetify + Vite)
 - frontend/android/ # Android-обёртка через Capacitor
 - mlmodels_store/ # ML модели и веса
+- fine tuning/ pipeline для сегментации деревьев: от разметки до обучения 
 
 ---
 
